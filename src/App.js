@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-// import Form from './components/Form';
+import ContactForm from './components/ContactForm';
+import Filter from './components/Filter';
+import ContactList from './components/ContactList';
 
 import { v4 as uuidv4 } from 'uuid';
+
+import styles from './App.module.css';
 
 class App extends Component {
   state = {
@@ -12,32 +16,44 @@ class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
 
-  onHandleInputChange = event => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  onSubmitName = event => {
-    event.preventDefault();
-
-    const { name, number } = this.state;
-
-    const newContact = {
-      name: name,
-      number: number,
-      id: uuidv4(),
-    };
-
+  deleteContact = id => {
     this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
 
-  onHandleFilterContacts = () => {
+  changeFilter = event => {
+    const { value } = event.currentTarget;
+    this.setState({ filter: value });
+  };
+
+  isRepeatedName = name => {
+    const repeatedName = this.state.contacts
+      .map(contact => contact.name.toLowerCase())
+      .includes(name.toLowerCase());
+
+    return repeatedName;
+  };
+
+  addNewContact = ({ name, number }) => {
+    if (this.isRepeatedName(name)) {
+      alert(`${name} is already in contacts.`);
+    } else {
+      const newContact = {
+        name: name,
+        number: number,
+        id: uuidv4(),
+      };
+
+      this.setState(prevState => ({
+        contacts: [...prevState.contacts, newContact],
+      }));
+    }
+  };
+
+  filterContacts = () => {
     const { contacts, filter } = this.state;
     const normalizedFilter = filter.toLowerCase();
 
@@ -47,61 +63,21 @@ class App extends Component {
   };
 
   render() {
-    const { name, number, filter } = this.state;
-    const filteredContacts = this.onHandleFilterContacts();
+    const { filter } = this.state;
+    const filteredContacts = this.filterContacts();
 
     return (
-      <section>
-        <h2>Phonebook</h2>
-        <form onSubmit={this.onSubmitName}>
-          <label>
-            Name
-            <input
-              onChange={this.onHandleInputChange}
-              type="text"
-              name="name"
-              value={name}
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-              required
-            />
-          </label>
+      <div className={styles.Wrapper}>
+        <h1>Phonebook</h1>
+        <ContactForm addNewContact={this.addNewContact} />
 
-          <label>
-            Number
-            <input
-              onChange={this.onHandleInputChange}
-              type="tel"
-              name="number"
-              value={number}
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-              required
-            />
-          </label>
-          <button type="submit">Add contact</button>
-        </form>
-
-        <h3>Contacts</h3>
-
-        <label>
-          Find contacts by name
-          <input
-            onChange={this.onHandleInputChange}
-            type="text"
-            name="filter"
-            value={filter}
-          />
-        </label>
-
-        <ul>
-          {filteredContacts.map(({ name, number, id }) => (
-            <li key={id}>
-              {name}: {number}
-            </li>
-          ))}
-        </ul>
-      </section>
+        <h2>Contacts</h2>
+        <Filter onChangeFilter={this.changeFilter} filter={filter} />
+        <ContactList
+          filteredContacts={filteredContacts}
+          deleteContact={this.deleteContact}
+        />
+      </div>
     );
   }
 }
