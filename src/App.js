@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import ContactForm from './components/ContactForm';
 import Filter from './components/Filter';
 import ContactList from './components/ContactList';
-
 import { v4 as uuidv4 } from 'uuid';
 
-import styles from './App.module.css';
+import './styles.css';
 
 class App extends Component {
   state = {
@@ -67,7 +66,7 @@ class App extends Component {
     const filteredContacts = this.filterContacts();
 
     return (
-      <div className={styles.Wrapper}>
+      <div className="Wrapper">
         <h1>Phonebook</h1>
         <ContactForm addNewContact={this.addNewContact} />
 

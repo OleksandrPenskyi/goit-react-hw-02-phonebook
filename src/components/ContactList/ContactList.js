@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import ContactListItem from './ContactListItem';
 
 const ContactList = ({ filteredContacts, deleteContact }) => (
@@ -15,17 +17,7 @@ const ContactList = ({ filteredContacts, deleteContact }) => (
 
 export default ContactList;
 
-// const ContactList = ({ filteredContacts, deleteContact }) => (
-//   <ul>
-//     {filteredContacts.map(({ name, number, id }) => (
-//       <li key={id}>
-//         <p>
-//           {name}: {number}
-//         </p>
-//         <button onClick={() => deleteContact(id)} type="button">
-//           Delete
-//         </button>
-//       </li>
-//     ))}
-//   </ul>
-// );
+ContactList.propTypes = {
+  filteredContacts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  deleteContact: PropTypes.func,
+};
