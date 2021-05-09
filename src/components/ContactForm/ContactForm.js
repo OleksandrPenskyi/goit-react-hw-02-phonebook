@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
+
 import styles from './ContactForm.module.css';
 
 const INITIAL_STATE = {
@@ -8,6 +10,8 @@ const INITIAL_STATE = {
 };
 
 class ContactForm extends Component {
+  static prop;
+
   state = { ...INITIAL_STATE };
 
   onInputChange = event => {
@@ -73,3 +77,7 @@ class ContactForm extends Component {
 }
 
 export default ContactForm;
+
+ContactForm.propTypes = {
+  addNewContact: PropTypes.func.isRequired,
+};
