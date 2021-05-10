@@ -10,7 +10,9 @@ const INITIAL_STATE = {
 };
 
 class ContactForm extends Component {
-  static prop;
+  static propTypes = {
+    addNewContact: PropTypes.func.isRequired,
+  };
 
   state = { ...INITIAL_STATE };
 
@@ -77,7 +79,3 @@ class ContactForm extends Component {
 }
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  addNewContact: PropTypes.func.isRequired,
-};
